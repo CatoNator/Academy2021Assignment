@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerBehaviourScript : MonoBehaviour
@@ -19,11 +18,20 @@ public class PlayerBehaviourScript : MonoBehaviour
     //this is the height at which the player objects starts in when the game loads in
     public static int StartingHeight = 0;
 
+    //Death particle generator prefab
+    public GameObject DeathParticlePrefab;
+
+    //Star collection particle generator prefab
+    public GameObject StarParticlePrefab;
+
     //Reference to the colour manager component, to change colours
     ColourManagerScript ColourScriptComponent = null;
 
     //Workaround to fixedupdate not getting the button state consistently
     bool MouseButtonHeld = true;
+
+    //Random generator; Using Microsoft's C# Random implementation for a simple integer randomizer, instead of Unity's floating point -based one
+    System.Random RandomGenerator = new System.Random();
     
     // Start is called before the first frame update
     void Start()
@@ -36,7 +44,7 @@ public class PlayerBehaviourScript : MonoBehaviour
         if (ColourScriptComponent == null)
             Debug.LogWarning("Player: Failed to fetch ColourManagerScript component!");
         else
-            ColourScriptComponent.CurrentColourIndex = 2;
+            ChangeColour();
     }
 
     //using FixedUpdate for player physics to keep the game speed consistent
@@ -77,21 +85,73 @@ public class PlayerBehaviourScript : MonoBehaviour
         transform.position = new Vector3(0, transform.position.y + VerticalVelocity, 0);
     }
 
+    //todo: comment
     void OnTriggerEnter2D(Collider2D Collider)
     {
         if (Collider.tag.Equals("Obstacle"))
         {
-            CheckObstacleCollision();
+            CheckObstacleCollision(Collider.gameObject);
+        }
+        else if (Collider.tag.Equals("ColourSwitcher"))
+        {
+            //change colour of player
+            ChangeColour();
+            
+            //destroy the colour switcher entity
+            UnityEngine.Object.Destroy(Collider.gameObject, 0);
+        }
+        else if (Collider.tag.Equals("Star"))
+        {
+            CollectStar(Collider.gameObject);
         }
     }
 
-    private void CheckObstacleCollision()
+    private void CheckObstacleCollision(GameObject Obstacle)
     {
-        Debug.Log("Ouch!");
+        if (Obstacle == null)
+        {
+            Debug.LogWarning("Player: Obstacle GameObject passed to CheckObstacleCollision was null!");
+            return;
+        }
+        
+        //Getting the colourmanagerscript from the object we collided with
+        ColourManagerScript ObstacleCManager = Obstacle.GetComponent<ColourManagerScript>();
+
+        //Null check
+        if (ObstacleCManager != null)
+        {
+            //if the colour indexes don't match, kill player
+            if (ObstacleCManager.CurrentColourIndex != ColourScriptComponent.CurrentColourIndex)
+                Death();
+        }
     }
 
-    private void Death()
+    private void ChangeColour()
     {
+        //pick random new colour
+        ColourScriptComponent.CurrentColourIndex = RandomGenerator.Next(0, 4);
+    }
 
+    private void CollectStar(GameObject Star)
+    {
+        Debug.Log("Star get!");
+
+        //creating the particle shower
+        UnityEngine.Object.Instantiate(StarParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+
+        //destroy the star entity
+        UnityEngine.Object.Destroy(Star, 0);
+
+        //Increment the UI counter (to do)
+    }
+
+    public void Death()
+    {
+        //Debug.Log("F");
+        //creating the particle shower
+        UnityEngine.Object.Instantiate(DeathParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+
+        //Destroying self (temp)
+        Destroy(gameObject, 0.01f);
     }
 }
