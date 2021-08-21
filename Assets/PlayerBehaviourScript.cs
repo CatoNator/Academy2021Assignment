@@ -32,17 +32,6 @@ public class PlayerBehaviourScript : MonoBehaviour
     //Star collection particle generator prefab
     public GameObject StarParticlePrefab;
 
-    //Required sound asset references
-
-    //Death sound
-    public AudioClip DeathSound;
-
-    //Jump sound
-    public AudioClip JumpSound;
-
-    //Star collecting sound
-    public AudioClip StarGetSound;
-
     //private scrip references
 
     //Player audio emitter
@@ -89,7 +78,6 @@ public class PlayerBehaviourScript : MonoBehaviour
             VerticalVelocity = PlayerJumpVelocity;
 
             //play jump sound
-            AudioEmitter.clip = JumpSound;
             AudioEmitter.Play();
 
             MouseButtonHeld = true;
@@ -131,7 +119,7 @@ public class PlayerBehaviourScript : MonoBehaviour
             ChangeColour();
             
             //destroy the colour switcher entity
-            UnityEngine.Object.Destroy(Collider.gameObject, 0);
+            Destroy(Collider.gameObject, 0);
         }
         else if (Collider.tag.Equals("Star"))
         {
@@ -174,13 +162,11 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     private void CollectStar(GameObject Star)
     {
-        Debug.Log("Star get!");
-
         //creating the particle shower
-        UnityEngine.Object.Instantiate(StarParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+        Instantiate(StarParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
 
         //destroy the star entity
-        UnityEngine.Object.Destroy(Star, 0);
+        Destroy(Star, 0);
 
         //Increment the UI counter
         if (LevelManagerEntity != null)
@@ -196,11 +182,7 @@ public class PlayerBehaviourScript : MonoBehaviour
     {
         //Debug.Log("F");
         //creating the particle shower
-        UnityEngine.Object.Instantiate(DeathParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
-
-        //play death sound
-        //AudioEmitter.clip = DeathSound;
-        //AudioEmitter.Play();
+        Instantiate(DeathParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
 
         //Adding some camera shake to spice the death up
         if (GameCamera != null)

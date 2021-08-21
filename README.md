@@ -1,7 +1,7 @@
 # Academy2021Assignment
 
 ## Improvements to be done
-* The spawning algorithm is kind of lame... I did in quite a hurry, but I think it could be quite easily improved and made a lot more fun.
+* The spawning algorithm is kind of lame... The collectibles and obstacles are always an equal space apart. It's not very fun, and clou dbe improved pretty easily.
 
 ## Known bugs and other miscellany
 Some of the game's functions were designed around the limited scope, but could cause issues in the future:
