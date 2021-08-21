@@ -6,6 +6,8 @@ public class ColourCircleGenerator : MonoBehaviour
 
     public float RotationSpeed = 1.0f;
 
+    public bool Rectangle = false;
+
     //just in case?
     const int ArcPieceCount = 4;
     
@@ -16,8 +18,15 @@ public class ColourCircleGenerator : MonoBehaviour
         {
             //generating arc piece
             GameObject NewArcPiece = (GameObject)Object.Instantiate(ArcPiece, transform);
+
             //setting the rotation of the new arc piece using Euler angles
-            NewArcPiece.transform.rotation = Quaternion.Euler(0, 0, 90*i);
+            NewArcPiece.transform.localRotation = Quaternion.Euler(0, 0, 90*i);
+
+            //offsetting the side by 1 to make a rectangle, otherwise the side pieces will form a cross
+
+            //this doesn't work... I give up
+            if (Rectangle)
+                NewArcPiece.transform.localPosition = new Vector3(1, 0, 0);
 
             //setting the colour of the arc piece
             ColourManagerScript CScript = NewArcPiece.GetComponent<ColourManagerScript>();

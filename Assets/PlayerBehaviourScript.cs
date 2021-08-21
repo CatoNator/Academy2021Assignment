@@ -18,11 +18,35 @@ public class PlayerBehaviourScript : MonoBehaviour
     //this is the height at which the player objects starts in when the game loads in
     public static int StartingHeight = 0;
 
+    //Required gameobjects
+
+    //Level manager, keeps track of score
+    public GameObject LevelManagerEntity;
+
+    //Game camera, for camera shake
+    public GameObject GameCamera;
+
     //Death particle generator prefab
     public GameObject DeathParticlePrefab;
 
     //Star collection particle generator prefab
     public GameObject StarParticlePrefab;
+
+    //Required sound asset references
+
+    //Death sound
+    public AudioClip DeathSound;
+
+    //Jump sound
+    public AudioClip JumpSound;
+
+    //Star collecting sound
+    public AudioClip StarGetSound;
+
+    //private scrip references
+
+    //Player audio emitter
+    AudioSource AudioEmitter = null;
 
     //Reference to the colour manager component, to change colours
     ColourManagerScript ColourScriptComponent = null;
@@ -39,12 +63,19 @@ public class PlayerBehaviourScript : MonoBehaviour
         //Set starting position, x and z don't matter since neither axis is used in the game
         transform.position = new Vector3(0, StartingHeight, 0);
 
+        //Getting colour manager script, setting random starting colour
         ColourScriptComponent = GetComponent<ColourManagerScript>();
 
         if (ColourScriptComponent == null)
             Debug.LogWarning("Player: Failed to fetch ColourManagerScript component!");
         else
             ChangeColour();
+
+        //Getting audio source for audio playback
+        AudioEmitter = GetComponent<AudioSource>();
+
+        if (AudioEmitter == null)
+            Debug.LogWarning("Player: Failed to fetch AudioSource component!");
     }
 
     //using FixedUpdate for player physics to keep the game speed consistent
@@ -58,6 +89,8 @@ public class PlayerBehaviourScript : MonoBehaviour
             VerticalVelocity = PlayerJumpVelocity;
 
             //play jump sound
+            AudioEmitter.clip = JumpSound;
+            AudioEmitter.Play();
 
             MouseButtonHeld = true;
         }
@@ -128,8 +161,15 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     private void ChangeColour()
     {
+        int NewColour = ColourScriptComponent.CurrentColourIndex;
+
+        //this could in theory cause an infinite loop, but I think bugs caused by an act of god are outside of the scop of this project
+        //...so let's hope it won't happen
+        while (NewColour == ColourScriptComponent.CurrentColourIndex)
+            NewColour = RandomGenerator.Next(0, 4);
+        
         //pick random new colour
-        ColourScriptComponent.CurrentColourIndex = RandomGenerator.Next(0, 4);
+        ColourScriptComponent.CurrentColourIndex = NewColour;
     }
 
     private void CollectStar(GameObject Star)
@@ -142,7 +182,14 @@ public class PlayerBehaviourScript : MonoBehaviour
         //destroy the star entity
         UnityEngine.Object.Destroy(Star, 0);
 
-        //Increment the UI counter (to do)
+        //Increment the UI counter
+        if (LevelManagerEntity != null)
+        {
+            LevelManager LManScript = LevelManagerEntity.GetComponent<LevelManager>();
+
+            if (LManScript != null)
+                LManScript.AddStar();
+        }
     }
 
     public void Death()
@@ -150,6 +197,21 @@ public class PlayerBehaviourScript : MonoBehaviour
         //Debug.Log("F");
         //creating the particle shower
         UnityEngine.Object.Instantiate(DeathParticlePrefab, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+
+        //play death sound
+        //AudioEmitter.clip = DeathSound;
+        //AudioEmitter.Play();
+
+        //Adding some camera shake to spice the death up
+        if (GameCamera != null)
+        {
+            CameraBehaviourScript CamScript = GameCamera.GetComponent<CameraBehaviourScript>();
+
+            if (CamScript != null)
+            {
+                CamScript.SetCamShakeAmount(0.35f);
+            }
+        }
 
         //Destroying self (temp)
         Destroy(gameObject, 0.01f);
