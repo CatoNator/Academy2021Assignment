@@ -36,10 +36,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\ColourCircleGenerator.cs" />
+     <Compile Include="Assets\ColourManagerScript.cs" />
      <Compile Include="Assets\PlayerBehaviourScript.cs" />
      <Compile Include="Assets\CameraBehaviorScript.cs" />
-     <Compile Include="Assets\ColourManagerScript.cs" />
-     <Compile Include="Assets\ColourCircleGenerator.cs" />
+     <Compile Include="Assets\LevelManager.cs" />
      <None Include="Assets\Sounds\sounds_copyright.txt" />
     <Reference Include="UnityEngine">
         <HintPath>D:/Unity/Unity 2021.1.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

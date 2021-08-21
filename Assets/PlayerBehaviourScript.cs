@@ -18,12 +18,25 @@ public class PlayerBehaviourScript : MonoBehaviour
 
     //this is the height at which the player objects starts in when the game loads in
     public static int StartingHeight = 0;
+
+    //Reference to the colour manager component, to change colours
+    ColourManagerScript ColourScriptComponent = null;
+
+    //Workaround to fixedupdate not getting the button state consistently
+    bool MouseButtonHeld = true;
     
     // Start is called before the first frame update
     void Start()
     {
         //Set starting position, x and z don't matter since neither axis is used in the game
         transform.position = new Vector3(0, StartingHeight, 0);
+
+        ColourScriptComponent = GetComponent<ColourManagerScript>();
+
+        if (ColourScriptComponent == null)
+            Debug.LogWarning("Player: Failed to fetch ColourManagerScript component!");
+        else
+            ColourScriptComponent.CurrentColourIndex = 2;
     }
 
     //using FixedUpdate for player physics to keep the game speed consistent
@@ -31,12 +44,17 @@ public class PlayerBehaviourScript : MonoBehaviour
     {
         //Jump button check
         //The doc said that it just needs to be the left (or primary) mouse button, so here we are
-        if (Input.GetMouseButton(0))
+        //Should be only on down state, so you can't hold the button
+        if (Input.GetMouseButton(0) && !MouseButtonHeld)
         {
             VerticalVelocity = PlayerJumpVelocity;
 
             //play jump sound
+
+            MouseButtonHeld = true;
         }
+        else if (!Input.GetMouseButton(0) && MouseButtonHeld)
+            MouseButtonHeld = false;
         
         if (transform.position.y <= StartingHeight && VerticalVelocity < 0)
         {
@@ -57,5 +75,23 @@ public class PlayerBehaviourScript : MonoBehaviour
             VerticalVelocity = TerminalVelocity;
 
         transform.position = new Vector3(0, transform.position.y + VerticalVelocity, 0);
+    }
+
+    void OnTriggerEnter2D(Collider2D Collider)
+    {
+        if (Collider.tag.Equals("Obstacle"))
+        {
+            CheckObstacleCollision();
+        }
+    }
+
+    private void CheckObstacleCollision()
+    {
+        Debug.Log("Ouch!");
+    }
+
+    private void Death()
+    {
+
     }
 }

@@ -7,8 +7,14 @@ public class ColourManagerScript : MonoBehaviour
     //current colour index
     public int CurrentColourIndex = 0;
 
-    //colour list (adjustable in editor)
-    public Color[] PlausibleColours;
+    //colour list (adjustable in editor), I added these as defaults to save time
+    public Color[] PlausibleColours =
+    {
+        new Color(0xFF, 0x00, 0x00, 0xFF),
+        new Color(0x00, 0xFF, 0x00, 0xFF),
+        new Color(0x00, 0x00, 0xFF, 0xFF),
+        new Color(0xFF, 0xFF, 0x00, 0xFF)
+    };
 
     //the entity with the sprite which colour is to be adjusted
     public GameObject SpriteEntity = null;
@@ -26,12 +32,19 @@ public class ColourManagerScript : MonoBehaviour
             Debug.LogWarning("ColourManagerScript: EntitySpriteRenderer is null!");
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //I'd make this a separate subroutine, but I don't remember how Unity handles entity creation and I don't feel like debugging race conditions all weekend
+        
+        //error handling
+        if (EntitySpriteRenderer == null)
+        {
+            Debug.LogWarning("ColourManagerScript: EntitySpriteRenderer is null!");
+            return;
+        }
+        
         //Setting the colour of the sprite to what we want it to be
-        //This could be a lot more efficient, but it works
-        if (EntitySpriteRenderer != null && CurrentColourIndex >= 0 && CurrentColourIndex < PlausibleColours.Length)
+        if (CurrentColourIndex >= 0 && CurrentColourIndex < PlausibleColours.Length)
         {
             EntitySpriteRenderer.color = PlausibleColours[CurrentColourIndex];
         }

@@ -31,6 +31,6 @@ public class ColourCircleGenerator : MonoBehaviour
     void FixedUpdate()
     {
         //updating the circle rotation here
-        //transform.rotation = Quaternion.Euler(0, 0, transform.rot);
+        transform.Rotate(new Vector3(0, 0, RotationSpeed));
     }
 }
