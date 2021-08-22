@@ -527,8 +527,8 @@ MonoBehaviour:
   CameraEntity: {fileID: 519420028}
   TextRendererEntity: {fileID: 917877446}
   CollectiblePrefabs:
-  - {fileID: 6973004182810981849, guid: 6c6c2e280f46b9c489ebcafe2d1f2397, type: 3}
   - {fileID: 3742894471607541019, guid: 5a33668189b833c46baeab14379b1c02, type: 3}
+  - {fileID: 6973004182810981849, guid: 6c6c2e280f46b9c489ebcafe2d1f2397, type: 3}
   ObstaclePrefabs:
   - {fileID: 1452845417694920443, guid: 11a0cd684efd396429aadd85d55bd91f, type: 3}
   - {fileID: 3293046146667963261, guid: 59897c96f5ee9834097ec99d4e53a3b8, type: 3}

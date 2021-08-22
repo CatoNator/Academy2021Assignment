@@ -178,9 +178,8 @@ MonoBehaviour:
   GameCamera: {fileID: 0}
   DeathParticlePrefab: {fileID: 294540363837302882, guid: a50a861cc6f7aa048adac63bdfc78f0e, type: 3}
   StarParticlePrefab: {fileID: 294540363837302882, guid: 53ecc67773781ea45ad47e42acf7361a, type: 3}
-  DeathSound: {fileID: 8300000, guid: 2d2f27118db7700449d1f094a10072be, type: 3}
-  JumpSound: {fileID: 8300000, guid: edc8e308bd9f1964eb1e8f8973bcd64c, type: 3}
-  StarGetSound: {fileID: 8300000, guid: 0fab1f12710d679469ebd85dae304a98, type: 3}
+  JumpSound: {fileID: 8300000, guid: 56b51430482b44241b64bde992dda93d, type: 3}
+  ColourSwitchSound: {fileID: 8300000, guid: 507f45a397cce1b44ac833f627027d34, type: 3}
 --- !u!58 &7621882096077128724
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -207,7 +206,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: edc8e308bd9f1964eb1e8f8973bcd64c, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 56b51430482b44241b64bde992dda93d, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

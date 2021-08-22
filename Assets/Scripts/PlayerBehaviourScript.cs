@@ -32,7 +32,15 @@ public class PlayerBehaviourScript : MonoBehaviour
     //Star collection particle generator prefab
     public GameObject StarParticlePrefab;
 
-    //private scrip references
+    //Required sound asset references
+
+    //jump noise
+    public AudioClip JumpSound;
+
+    //colour switch jingle
+    public AudioClip ColourSwitchSound;
+
+    //private script references
 
     //Player audio emitter
     AudioSource AudioEmitter = null;
@@ -78,7 +86,7 @@ public class PlayerBehaviourScript : MonoBehaviour
             VerticalVelocity = PlayerJumpVelocity;
 
             //play jump sound
-            AudioEmitter.Play();
+            AudioEmitter.PlayOneShot(JumpSound, 0.5f);
 
             MouseButtonHeld = true;
         }
@@ -120,6 +128,9 @@ public class PlayerBehaviourScript : MonoBehaviour
             
             //destroy the colour switcher entity
             Destroy(Collider.gameObject, 0);
+
+            //play collection sound
+            AudioEmitter.PlayOneShot(ColourSwitchSound, 0.9f);
         }
         else if (Collider.tag.Equals("Star"))
         {

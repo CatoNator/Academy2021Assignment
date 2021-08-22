@@ -36,11 +36,11 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\ColourCircleGenerator.cs" />
-     <Compile Include="Assets\ColourManagerScript.cs" />
-     <Compile Include="Assets\PlayerBehaviourScript.cs" />
-     <Compile Include="Assets\CameraBehaviourScript.cs" />
-     <Compile Include="Assets\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\ColourCircleGenerator.cs" />
+     <Compile Include="Assets\Scripts\ColourManagerScript.cs" />
+     <Compile Include="Assets\Scripts\PlayerBehaviourScript.cs" />
+     <Compile Include="Assets\Scripts\CameraBehaviourScript.cs" />
+     <Compile Include="Assets\Scripts\LevelManager.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

@@ -42,6 +42,9 @@ public class LevelManager : MonoBehaviour
     //This is a list of all the objects created by the spawner system, in order to despawn stuff outside of the view
     List<GameObject> SpawnedObjects;
 
+    //quickfix to prevent colour switchers from spawning consecutively
+    bool CanSpawnCollectable = false;
+
     //The next position to spawn an object in
     float NextSpawnPos = 0;
 
@@ -96,11 +99,10 @@ public class LevelManager : MonoBehaviour
         else
             Debug.LogWarning("LevelManager: CameraEntity is null!");
 
+        //if the player entity no longer exists, we allow the player to reset
         if (PlayerEntity == null)
         {
-            Debug.Log("Player is gone! Allowing reset");
-            
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("Level reset");
                 ResetLevel();
@@ -137,8 +139,12 @@ public class LevelManager : MonoBehaviour
 
     private void SpawnObject()
     {
-        //Random int to pick something to spawn
-        int ChooseObjectType = RandomGenerator.Next(0, 4);
+        //int that's used to reandomization
+        int ChooseObjectType = 1;
+
+        //Randomization is only active if collectables can spawn; otherwise the next object is force to be an obstacle
+        if (CanSpawnCollectable)
+            ChooseObjectType = RandomGenerator.Next(0, 4);
 
         //0 spawns a collectible - star or a colour switcher gizmo
         if (ChooseObjectType == 0)
@@ -153,6 +159,8 @@ public class LevelManager : MonoBehaviour
             GameObject NewCollectible = (GameObject)Instantiate(CollectiblePrefabs[ChooseObjectType], SpawnPos, Quaternion.identity);
             SpawnedObjects.Add(NewCollectible);
 
+            //Preventing next object from being a collectable
+            CanSpawnCollectable = false;
         }
         else //otherwise we spawn an obstacle
         {
@@ -166,6 +174,9 @@ public class LevelManager : MonoBehaviour
             //adding the newly spawned obstacle into the list of spawned stuff
             GameObject NewObstacle = (GameObject)Instantiate(ObstacleType, SpawnPos, Quaternion.identity);
             SpawnedObjects.Add(NewObstacle);
+
+            //We've spawned an obstacle, so the next object can be a collectable
+            CanSpawnCollectable = true;
         }
     }
 
@@ -192,7 +203,7 @@ public class LevelManager : MonoBehaviour
                 CamScript.CameraTarget = PlayerEntity;
             }
             else
-                Debug.LogWarning("LevelManager: Failed to fecth CameraBehaviourScript from camera entity!");
+                Debug.LogWarning("LevelManager: Failed to fetch CameraBehaviourScript from camera entity!");
         }
         else
                 Debug.LogWarning("LevelManager: Camera is null!");
@@ -217,6 +228,25 @@ public class LevelManager : MonoBehaviour
 
         SpawnedObjects.Clear();
 
+        //resetting spawn distance
         NextSpawnPos = 0;
+
+        //extremely scuffed system to spawn an object on-screen at the start. otherwise all the spawning happens above the sreen,
+        //which means that the player is faced with an empty screen upon starting, which isn't good. This code sucks, though
+        //spawn random obstacle
+        int ChooseObjectType = RandomGenerator.Next(0, ObstaclePrefabs.Length);
+        GameObject ObstacleType = ObstaclePrefabs[ChooseObjectType];
+
+        Vector3 SpawnPos = new Vector3(ObstacleType.transform.position.x, CameraEntity.transform.position.y, 0);
+
+        //adding the newly spawned obstacle into the list of spawned stuff
+        GameObject NewObstacle = (GameObject)Instantiate(ObstacleType, SpawnPos, Quaternion.identity);
+        SpawnedObjects.Add(NewObstacle);
+
+        //reset collectible spawning
+        CanSpawnCollectable = true;
+
+        //resetting star count
+        StarCount = 0;
     }
 }
